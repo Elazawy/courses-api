@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv').config();
+const coursesRouter = require('./routes/courses.route');
 
 const app = express();
 
@@ -12,3 +13,8 @@ mongoose.connect(process.env.DB_URI)
         })
     })
 
+app.use(express.json());
+
+
+// Routes
+app.use('/api/courses', coursesRouter)
