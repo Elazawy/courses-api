@@ -14,19 +14,21 @@ const getAllUsers = asyncWrapper (
 
 const register = asyncWrapper(
     async (req, res, next) => {
-        console.log(req.body);
         const oldUser = await User.findOne({email : req.body.email});
         if(oldUser){
             const error = appError.create(400, FAIL, "User already exists");
             return next(error);
         }
-        const {firstName, lastName, email, password} = req.body;
+        const {firstName, lastName, email, password, role} = req.body;
+        const image = req.file.filename;
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const newUser = await new User({
             firstName,
             lastName,
             email,
+            role,
+            image,
             password: hashedPassword,
         });
         await newUser.save();
@@ -43,7 +45,7 @@ const login = asyncWrapper(
             const error = appError.create(400, FAIL, "Invalid email or password");
         }
         const token = jwt.sign({
-                email: user.email, id: user._id},
+                email: user.email, id: user._id, role: user.role},
             process.env.JWT_SECRET_KEY,
             {expiresIn: "7d"});
         res.status(200).json({status: SUCCESS, data: {token: token}});

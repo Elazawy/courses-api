@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const { body } = require('express-validator');
 const courseController = require('../controllers/courses.controller');
+const verifyToken = require("../middlewares/verifyToken");
+const allowedTo = require("../middlewares/allowedTo");
 
 router.route('/')
     .get(courseController.getAllCourses)
@@ -18,6 +20,6 @@ router.route('/')
 router.route('/:courseId')
     .get(courseController.getCourse)
     .patch(courseController.updateCourse)
-    .delete(courseController.deleteCourse);
+    .delete(verifyToken, allowedTo("ADMIN", "MANAGER"), courseController.deleteCourse);
 
 module.exports = router;

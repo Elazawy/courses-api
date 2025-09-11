@@ -11,8 +11,9 @@ const verifyToken = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
+        req.userRole = decoded.role;
         next();
-    } catch (error) {
+    } catch (err) {
         const error = appError.create(401, "Invalid token", ERROR);
         next(error);
     }

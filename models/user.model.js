@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const userRoles = require("../utils/userRoles");
 
 const userSchema = mongoose.Schema({
     firstName: {
@@ -20,7 +21,15 @@ const userSchema = mongoose.Schema({
         type: String,
         required: true,
     },
-
+    role: {
+        type: String,
+        enum: [userRoles.USER, userRoles.ADMIN, userRoles.MANAGER],
+        default: userRoles.USER,
+    },
+    image: {
+        type: String,
+        default: "uploads/profile.png"
+    }
 })
 
 module.exports = mongoose.model("User", userSchema);

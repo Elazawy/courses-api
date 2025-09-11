@@ -5,6 +5,7 @@ const coursesRouter = require('./routes/courses.route');
 const userRouter = require('./routes/users.route');
 const {ERROR} = require("./utils/httpStatusText");
 const cors = require('cors');
+const path = require("path");
 
 const app = express();
 
@@ -16,6 +17,7 @@ mongoose.connect(process.env.DB_URI)
         })
     })
 
+app.use('/api/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(cors());
 app.use(express.json());
 
